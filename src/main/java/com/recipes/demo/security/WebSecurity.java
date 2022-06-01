@@ -59,6 +59,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		return filter;
 	}
 	
+	/*
+	 * java.lang.IllegalArgumentException: When allowCredentials is true, 
+	 * allowedOrigins cannot contain the special value "*" since that cannot be set on the "Access-Control-Allow-Origin" response header. 
+	 * To allow credentials to a set of origins, list them explicitly or consider using "allowedOriginPatterns" instead.
+	 */
+	
 	@Bean
     public CorsConfigurationSource corsConfigurationSource()
     {
