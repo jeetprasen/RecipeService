@@ -1,4 +1,4 @@
-FROM openjdk:11
-ADD target/recipe.jar recipe.jar
+FROM tomcat:9
+ADD target/recipe.war /usr/local/tomcat/webapps/
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar","recipe.jar"]
+CMD ["catalina.sh", "run"]
