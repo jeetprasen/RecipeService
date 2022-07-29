@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  app:
+    build: .
+    image: recipeweb
+    ports:
+      - 8080:8080
+    volumes:
+      - ./src/main/resources/db/general.db:/webapps/general.db
+    environment:
+      - spring.datasource.url=jdbc:sqlite:./webapps/general.db

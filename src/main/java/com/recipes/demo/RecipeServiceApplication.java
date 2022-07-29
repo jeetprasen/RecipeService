@@ -42,21 +42,4 @@ public class RecipeServiceApplication extends SpringBootServletInitializer {
 		return new AppProperties();
 	}
 
-	/*
-	 * @Bean public CorsFilter corsFilter() { final UrlBasedCorsConfigurationSource
-	 * source = new UrlBasedCorsConfigurationSource();
-	 * 
-	 * List<String> allowedOrigins = new ArrayList<String>();
-	 * allowedOrigins.add("http://localhost:4200");
-	 * 
-	 * final CorsConfiguration config = new CorsConfiguration();
-	 * config.setAllowCredentials(true); config.setAllowedOrigins(allowedOrigins);
-	 * config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
-	 * config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE",
-	 * "OPTIONS"));
-	 * 
-	 * source.registerCorsConfiguration("/**", config); return new
-	 * CorsFilter(source); }
-	 */
-
 }

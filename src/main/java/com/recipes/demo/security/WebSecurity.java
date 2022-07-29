@@ -29,70 +29,24 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
-		//http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and()
-		//http.cors().configurationSource(request -> corsConfiguration)
-		http.cors().and()
-		.csrf().disable()
-		.authorizeRequests()
-		.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
-		.permitAll()
-		.antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**","/actuator/**")
-        .permitAll()
-        .antMatchers("/h2-console/**")
-        .permitAll()
-		.anyRequest()
-		.authenticated()
-		.and()
-		.addFilter(getAuthenticationFilter())
-		.addFilter(new AuthorizationFilter(authenticationManager())).sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+		http
+			.cors().and()
+			.csrf().disable().authorizeRequests()
+			.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
+			.permitAll()
+			.antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", "/actuator/**")
+			.permitAll()
+			.antMatchers("/h2-console/**")
+			.permitAll()
+			.anyRequest().authenticated().and()
+			.addFilter(getAuthenticationFilter())
+			.addFilter(new AuthorizationFilter(authenticationManager()))
+			.sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		http.headers().frameOptions().sameOrigin();
 	}
-
-
-	@Bean
-    CorsConfigurationSource corsConfigurationSource() 
-    {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://example.com"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-	
-	/*
-	 * @Bean CorsConfigurationSource corsConfigurationSource() {
-	 * UrlBasedCorsConfigurationSource source = new
-	 * UrlBasedCorsConfigurationSource(); source.registerCorsConfiguration("/**",
-	 * new CorsConfiguration().applyPermitDefaultValues()); return source; }
-	 */
-	  
-	 
-
-
-	/*
-	 * To use this add:
-	 * http.cors().configurationSource(configurationSource()).add() in above configure
-	 *
-	 * private CorsConfigurationSource configurationSource() {
-	 * UrlBasedCorsConfigurationSource source = new
-	 * UrlBasedCorsConfigurationSource();
-	 * 
-	 * List<String> allowedOrigins = new ArrayList<String>();
-	 * allowedOrigins.add("http://localhost:4200");
-	 * 
-	 * final CorsConfiguration config = new CorsConfiguration();
-	 * config.setAllowedOriginPatterns(allowedOrigins);
-	 * config.setAllowCredentials(true);
-	 * config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
-	 * config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE",
-	 * "OPTIONS"));
-	 * 
-	 * source.registerCorsConfiguration("/**", config); return source; }
-	 */
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -104,4 +58,26 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		filter.setFilterProcessesUrl("/users/login");
 		return filter;
 	}
+	
+	/*
+	 * java.lang.IllegalArgumentException: When allowCredentials is true, 
+	 * allowedOrigins cannot contain the special value "*" since that cannot be set on the "Access-Control-Allow-Origin" response header. 
+	 * To allow credentials to a set of origins, list them explicitly or consider using "allowedOriginPatterns" instead.
+	 */
+	
+	@Bean
+    public CorsConfigurationSource corsConfigurationSource()
+    {
+    	final CorsConfiguration configuration = new CorsConfiguration();
+    	   
+    	configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+    	configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE","OPTIONS"));
+    	configuration.setAllowCredentials(true);
+    	configuration.setAllowedHeaders(Arrays.asList("*"));
+    	
+    	final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    	source.registerCorsConfiguration("/**", configuration);
+    	
+    	return source;
+    }
 }
